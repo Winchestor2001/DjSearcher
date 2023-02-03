@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Mavzular
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="right_content">
+    <div class="row p-3">
+        {% if articles %}
+        {% for article in articles %}
+        <div class="col-12">
+            <div class="file_box">
+                <i class="fa-regular fa-file-word"></i>
+                <a href="{% url 'article_detail' article.slug %}">{{ article.name }}</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="d-flex justify-content-center align-items-center pt-4">
+            <lottie-player
+                src="https://assets4.lottiefiles.com/packages/lf20_hl5n0bwb.json"
+                speed="1.5"
+                style="width: 200px; height: 200px"
+                loop
+                autoplay
+            ></lottie-player>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

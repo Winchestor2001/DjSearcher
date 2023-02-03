@@ -1,0 +1,40 @@
+<div class="col-12 col-lg-3">
+    <div class="left_bar">
+        <ul class="py-3">
+            <div class="logo text-center p-3"><a href="{% url 'home' %}">Searching!!!</a></div>
+            {% for category in categories %}
+            <li class="m-3 mx-4" onclick="clickCategory(this);" data-filter_item="{{ category.0.slug }}">
+                {{ category.0.name }} <span class="cat_count">{{ category.1 }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    function clickCategory(e){
+        console.log(location.pathname);
+        let all_boxes = document.querySelectorAll('.file_boxes')
+        if (location.pathname != '/'){
+            location.replace('/')
+        }
+        all_boxes.forEach((item) => {
+            item.style.display = 'block';
+            if (item.dataset.filter != e.dataset.filter_item){
+                console.log(item);
+                item.style.display = 'none';
+            }
+            
+        })
+        // let category = e.textContent.replace(new RegExp("[0-9]", "g"), "").trim()
+        // console.log(category);
+        // $.ajax({
+        //     url: "{% url 'home' %}",
+        //     type: "get",
+        //     data: { category: category },
+        //     success: function (data) {
+        //         console.log(data);
+        //     },
+        // });
+    }
+</script>

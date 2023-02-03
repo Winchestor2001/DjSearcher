@@ -1,0 +1,37 @@
+<div class="search_box py-5 mt-3">
+  <div class="w-100 px-lg-5 d-flex align-items-center justify-content-center">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input
+      oninput="ajaxSearch(event);"
+      name="q"
+      class="input"
+      type="text"
+      placeholder="Qidirub..."
+    />
+  </div>
+  <div class="result_search">
+    <ul class="ul_search p-0">
+        
+    </ul>
+  </div>
+</div>
+
+<script>
+  function ajaxSearch(e) {
+    // console.log(e.target.value);
+    if (e.target.value == "") {
+      let result_search = (document.querySelector(
+        ".result_search"
+      ).style.display = "none");
+    } else {
+      $.ajax({
+        url: "{% url 'search_articles' %}",
+        type: "get",
+        data: { q: e.target.value },
+        success: function (data) {
+          searchResults(data);
+        },
+      });
+    }
+  }
+</script>

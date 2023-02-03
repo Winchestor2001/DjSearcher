@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load custom_template_filters %}
+
+{% block title %}
+Bosh saxifa
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="right_content">
+    <div class="row p-3">
+        {% for subject in subjects %}
+        <div class="col-12 col-sm-6 p-1">
+            <div class="file_box file_boxes" data-filter="{{ subject.category.slug }}">
+                <i class="fa-solid fa-book"></i> <a href="{% url 'articles' subject.category.slug subject.slug %}">{{subject.name}}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if articles %}
+    <hr class="color">
+    <div class="row p-3">
+        <h5 class="text-center color">So'nggi qo'shilganlar</h5>
+        {% for article in articles %}
+        <div class="col-12 p-1">
+            <div class="file_box">
+                <i class="fa-solid fa-book"></i> <a href="{% url 'article_detail' article.slug %}">{{article.name}}</a> <span class="ms-2 fs-6">{{ article.date|timesince_uz }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

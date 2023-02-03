@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{article.name}}
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="right_content">
+    <div class="row p-3">
+        <div class="col-12">
+            <div class="file_box">
+                <h4><a href="{% url 'article_detail' article.slug %}">{{article.name}}</a></h4>
+                <div class="file_info d-md-flex justify-content-between text-center align-items-center">
+                    <div  class="mb-4">
+                        <p class="text-muted"><i class="fa-regular fa-clock icon"></i> Yuklangan vaqt:</p>
+                        <h5>{{article.date | date:"Y-m-d"}}</h5>
+                    </div>
+                    <div  class="mb-4">
+                        <p class="text-muted"><i class="icon fa-solid fa-download"></i> Ko'chirishlar soni:</p>
+                        <h5>{{article.downloads}}</h5>
+                    </div>
+                    <div  class="mb-4">
+                        <p class="text-muted"><i class="icon fa-solid fa-server"></i> Hajmi:</p>
+                        <h5>{{article.file.size|filesizeformat}}</h5>
+                    </div>
+                    <div  class="mb-4">
+                        <button  class="btn bg-color text-white"><a onclick="downloadCounter(this);" data-slug="{{article.slug}}" class="text-white" href="{{ article.file.url }}" download="{{ article.name }}">Yuklab olish</a></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="file_box p-5">
+                <center>
+                    <div class="pdf_bar">
+                        <button class="btn color m-0 p-0" id="prev-page"><i class="fa-regular fa-circle-left"></i></button>
+                        <span class="page_num">1</span> / <span class="page_count">3</span>
+                        <button class="btn color" id="next-page"><i class="fa-regular fa-circle-right"></i></button>
+                    </div>
+                    <canvas id="pdf_render" class="my-4 shadow img-fluid">
+            
+                    </canvas>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+<script>
+    const url = "/media/{{ article.file }}";
+    let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null;
+    let scale = 1.5, canvas = document.querySelector('#pdf_render'), ctx = canvas.getContext('2d');
+    
+    const renderPage = num => {
+        pageIsRendering = true;
+        pdfDoc.getPage(num).then(page => {
+            const viewport = page.getViewport({scale});
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            const renderCtx = {
+                canvasContext: ctx, viewport
+            }
+            page.render(renderCtx).promise.then(() => {
+                pageIsRendering = false;
+                if (pageNumIsPending !== null) {
+                    renderPage(pageNumIsPending);
+                    pageNumIsPending = null;
+                }
+            });
+            document.querySelector('.page_num').textContent = num
+        });
+    }
+
+    const queueRenderPage = num => {
+        if (pageIsRendering) {
+            pageNumIsPending = num;
+        } else {
+            renderPage(num);
+        }
+    }
+
+    const showPrevPage = () => {
+        if (pageNum <= 1) {
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    };
+    const showNextPage = () => {
+        if (pageNum >= pdfDoc.numPages) {
+            return;
+        };
+        pageNum++;
+        queueRenderPage(pageNum);
+    };
+
+    pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+        pdfDoc = pdfDoc_;
+        document.querySelector('.page_count').textContent = pdfDoc.numPages;
+        renderPage(pageNum);
+    });
+
+    document.querySelector('#prev-page').addEventListener('click', showPrevPage)
+    document.querySelector('#next-page').addEventListener('click', showNextPage)
+
+
+    function downloadCounter(e){
+        $.ajax({
+            url: "{% url 'count_downloads' %}",
+            type: 'get',
+            data: {slug: e.dataset.slug},
+            success: function(data){
+                // location.reload();
+            }
+        });
+    }
+</script>
+{% endblock %}

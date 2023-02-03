@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- fontawasome -->
+    <link rel="stylesheet" href="{% static 'css/fontawasome.min.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- bootstarp css -->
+    <link rel="stylesheet" href="{% static 'bootstrap-5.0.2/css/bootstrap.min.css' %}" />
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>
+        {% block title %}
+        
+        {% endblock %}
+    </title>
+</head>
+<body>
+    {% include 'includes/loader.html' %}
+    <button onclick="dark()" class="dark_light">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+    <section class="container">
+        {% include 'includes/search.html' %}
+        
+        <div class="content_box">
+            <div class="row">
+                {% include 'includes/left_bar.html' %}
+
+                <div class="col-12 col-lg-9">
+                    {% block content %}
+                    
+                    {% endblock %}
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <!-- jquery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <!-- bootstarp js -->
+    <script src="{% static 'bootstrap-5.0.2/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
